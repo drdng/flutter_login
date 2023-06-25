@@ -29,6 +29,7 @@ part 'login_card.dart';
 part 'recover_card.dart';
 part 'recover_confirm_card.dart';
 part 'signup_confirm_card.dart';
+part 'wait_email_card.dart';
 
 class AuthCard extends StatefulWidget {
   const AuthCard({
@@ -52,6 +53,7 @@ class AuthCard extends StatefulWidget {
     required this.scrollable,
     required this.confirmSignupKeyboardType,
     this.introWidget,
+    this.hidePassword = false,
   });
 
   final EdgeInsets padding;
@@ -77,6 +79,8 @@ class AuthCard extends StatefulWidget {
   final TextInputType? confirmSignupKeyboardType;
   final Widget? introWidget;
 
+  final bool hidePassword;
+
   @override
   AuthCardState createState() => AuthCardState();
 }
@@ -86,12 +90,14 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
   final GlobalKey _additionalSignUpCardKey = GlobalKey();
   final GlobalKey _confirmRecoverCardKey = GlobalKey();
   final GlobalKey _confirmSignUpCardKey = GlobalKey();
+  final GlobalKey _waitEmailCardKey = GlobalKey();
 
   static const int _loginPageIndex = 0;
-  static const int _recoveryIndex = 1;
-  static const int _additionalSignUpIndex = 2;
-  static const int _confirmSignup = 3;
-  static const int _confirmRecover = 4;
+  static const int _additionalSignUpIndex = 1;
+  static const int _waitEmail = 2;
+  static const int _recoveryIndex = 3;
+  static const int _confirmSignup = 4;
+  static const int _confirmRecover = 5;
 
   int _pageIndex = _loginPageIndex;
 
@@ -361,9 +367,10 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             onSwitchSignUpAdditionalData: () =>
                 _changeCard(_additionalSignUpIndex),
             onSubmitCompleted: () {
-              _forwardChangeRouteAnimation(_loginCardKey).then((_) {
-                widget.onSubmitCompleted!();
-              });
+              _changeCard(_waitEmail);
+              // _forwardChangeRouteAnimation(_loginCardKey).then((_) {
+              //   widget.onSubmitCompleted!();
+              // });
             },
             requireSignUpConfirmation: requireSignUpConfirmation,
             onSwitchConfirmSignup: () => _changeCard(_confirmSignup),
@@ -372,6 +379,7 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             loginAfterSignUp: widget.loginAfterSignUp,
             hideProvidersTitle: widget.hideProvidersTitle,
             introWidget: widget.introWidget,
+            hidePassword: widget.hidePassword,
           ),
         );
       case _recoveryIndex:
@@ -405,18 +413,19 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             onBack: () => _changeCard(_loginPageIndex),
             loginTheme: widget.loginTheme,
             onSubmitCompleted: () async {
-              final requireSignupConfirmation =
-                  await requireSignUpConfirmation();
-              if (requireSignupConfirmation) {
-                _changeCard(_confirmSignup);
-              } else if (widget.loginAfterSignUp) {
-                _forwardChangeRouteAnimation(_additionalSignUpCardKey)
-                    .then((_) {
-                  widget.onSubmitCompleted!();
-                });
-              } else {
-                _changeCard(_loginPageIndex);
-              }
+              _changeCard(_waitEmail);
+              // final requireSignupConfirmation =
+              //     await requireSignUpConfirmation();
+              // if (requireSignupConfirmation) {
+              //   _changeCard(_confirmSignup);
+              // } else if (widget.loginAfterSignUp) {
+              //   _forwardChangeRouteAnimation(_additionalSignUpCardKey)
+              //       .then((_) {
+              //     widget.onSubmitCompleted!();
+              //   });
+              // } else {
+              //   _changeCard(_loginPageIndex);
+              // }
             },
           ),
         );
@@ -450,6 +459,15 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
             loginAfterSignUp: widget.loginAfterSignUp,
             keyboardType: widget.confirmSignupKeyboardType,
           ),
+        );
+
+      case _waitEmail:
+        return _WaitEmailCard(
+          key: _waitEmailCardKey,
+          onBack: () => _changeCard(_loginPageIndex),
+          onSubmitCompleted: () => widget.onSubmitCompleted!(),
+          loadingController: formController,
+          keyboardType: widget.confirmSignupKeyboardType,
         );
     }
     throw IndexError.withLength(index, 5);

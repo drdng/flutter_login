@@ -36,6 +36,7 @@ class LoginMessages with ChangeNotifier {
     this.setPasswordButton = defaultSetPasswordButton,
     this.confirmRecoverSuccess = defaultConfirmRecoverSuccess,
     this.recoverCodePasswordDescription = defaultRecoverCodePasswordDescription,
+    this.waitEmailVerificationIntro = defaultWaitEmailVerificationIntro,
   });
 
   static const defaultPasswordHint = 'Password';
@@ -77,6 +78,8 @@ class LoginMessages with ChangeNotifier {
   static const defaultResendCodeSuccess = 'A new email has been sent.';
   static const defaultConfirmSignupButton = 'CONFIRM';
   static const defaultConfirmSignupSuccess = 'Account confirmed.';
+  static const defaultWaitEmailVerificationIntro =
+      'Please check your mailbox. You can log in through the link provided in the email.';
 
   /// Hint text of the userHint [TextField]
   /// Default will be selected based on userType
@@ -178,4 +181,6 @@ class LoginMessages with ChangeNotifier {
   /// Description in password recovery form, shown when the onConfirmRecover
   /// callback is provided
   final String recoverCodePasswordDescription;
+
+  final String waitEmailVerificationIntro;
 }

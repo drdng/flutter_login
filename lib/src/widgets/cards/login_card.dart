@@ -19,6 +19,7 @@ class _LoginCard extends StatefulWidget {
     this.loginAfterSignUp = true,
     this.hideProvidersTitle = false,
     this.introWidget,
+    this.hidePassword = false,
   });
 
   final AnimationController loadingController;
@@ -37,6 +38,7 @@ class _LoginCard extends StatefulWidget {
   final bool requireAdditionalSignUpFields;
   final Future<bool> Function() requireSignUpConfirmation;
   final Widget? introWidget;
+  final bool hidePassword;
 
   @override
   _LoginCardState createState() => _LoginCardState();
@@ -698,8 +700,9 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
                 children: <Widget>[
                   if (widget.introWidget != null) widget.introWidget!,
                   _buildUserField(textFieldWidth, messages, auth),
-                  const SizedBox(height: 20),
-                  _buildPasswordField(textFieldWidth, messages, auth),
+                  if (!widget.hidePassword) const SizedBox(height: 20),
+                  if (!widget.hidePassword)
+                    _buildPasswordField(textFieldWidth, messages, auth),
                   const SizedBox(height: 10),
                 ],
               ),
@@ -720,14 +723,15 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
             onExpandCompleted: () => _postSwitchAuthController.forward(),
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  child: _buildConfirmPasswordField(
-                    textFieldWidth,
-                    messages,
-                    auth,
+                if (!widget.hidePassword)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: _buildConfirmPasswordField(
+                      textFieldWidth,
+                      messages,
+                      auth,
+                    ),
                   ),
-                ),
                 for (var e in auth.termsOfService)
                   TermCheckbox(
                     termOfService: e,
