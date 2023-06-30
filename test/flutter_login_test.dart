@@ -1239,7 +1239,7 @@ void main() {
             onLogin: (data) => null,
             onRecoverPassword: (data) => null,
             passwordValidator: (value) => null,
-            footer: 'Copyright flutter_login',
+            // footer: 'Copyright flutter_login',
           ),
         );
     await tester.pumpWidget(loginBuilder());

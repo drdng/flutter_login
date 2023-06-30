@@ -288,7 +288,7 @@ class FlutterLogin extends StatefulWidget {
     this.loginProviders = const <LoginProvider>[],
     this.hideForgotPasswordButton = false,
     this.loginAfterSignUp = true,
-    this.footer,
+    this.footerWidget,
     this.hideProvidersTitle = false,
     this.additionalSignupFields,
     this.disableCustomPageTransformer = false,
@@ -390,7 +390,9 @@ class FlutterLogin extends StatefulWidget {
   final bool loginAfterSignUp;
 
   /// Optional footer text for example a copyright notice
-  final String? footer;
+  // final String? footer;
+
+  final Widget? footerWidget;
 
   /// Hide the title above the login providers. If no providers are set this is uneffective
   final bool hideProvidersTitle;
@@ -763,17 +765,17 @@ class _FlutterLoginState extends State<FlutterLogin>
     final passwordValidator =
         widget.passwordValidator ?? FlutterLogin.defaultPasswordValidator;
 
-    Widget footerWidget = const SizedBox();
-    if (widget.footer != null) {
-      footerWidget = Padding(
-        padding: EdgeInsets.only(bottom: loginTheme.footerBottomPadding),
-        child: Text(
-          widget.footer!,
-          style: theme.textTheme.titleSmall,
-          textAlign: TextAlign.center,
-        ),
-      );
-    }
+    // Widget footerWidget = const SizedBox();
+    // if (widget.footer != null) {
+    //   footerWidget = Padding(
+    //     padding: EdgeInsets.only(bottom: loginTheme.footerBottomPadding),
+    //     child: Text(
+    //       widget.footer!,
+    //       style: theme.textTheme.titleSmall,
+    //       textAlign: TextAlign.center,
+    //     ),
+    //   );
+    // }
 
     return MultiProvider(
       providers: [
@@ -854,7 +856,7 @@ class _FlutterLoginState extends State<FlutterLogin>
                     Positioned.fill(
                       child: Align(
                         alignment: Alignment.bottomCenter,
-                        child: footerWidget,
+                        child: widget.footerWidget,
                       ),
                     ),
                     ...?widget.children,
